@@ -35,3 +35,25 @@
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
 	</natures>
 </projectDescription>
+
+
+
+
+
+---
+- hosts: Ansiblehost
+  tasks:
+  - name: create docker image
+    command: docker build -t hello_world:latest .
+    args:
+     chdir: /opt/docker
+  - name: create tag to push image onto dockerHub
+    command: docker tag hello_world:latest jayakumar301/hello_world:latest
+  - name: Push docker image
+    command: docker push jayakumar301/hello_world:latest
+
+---
+- hosts: dockerhost
+  tasks:
+  - name: create container
+    command: docker run -d --name hello_world_server -p 8084:8080 jayakumar301/hello_world
